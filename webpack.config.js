@@ -1,4 +1,5 @@
 const path = require('path');
+const miniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
@@ -13,12 +14,21 @@ module.exports = {
     new CopyPlugin({
       patterns: [{ from: 'public' }],
     }),
+    new miniCssExtractPlugin(),
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
   module: {
     rules: [
+      {
+        mimetype: 'image/svg+xml',
+        scheme: 'data',
+        type: 'asset/resource',
+        generator: {
+          filename: 'icons/[hash].svg'
+        }
+      },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
@@ -37,7 +47,8 @@ module.exports = {
         test: /\.(scss)$/,
         use: [{
           // inject CSS to page
-          loader: 'style-loader'
+          //loader: 'style-loader'
+          loader: miniCssExtractPlugin.loader
         }, {
           // translates CSS into CommonJS modules
           loader: 'css-loader'
