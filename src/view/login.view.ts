@@ -13,8 +13,6 @@ export default class LoginView extends AbstractView {
   }
 
   get template() {
-    //apply
-
     return (
       `
       <div class="login_container">
@@ -29,7 +27,7 @@ export default class LoginView extends AbstractView {
             <label for="cert-list-box" class="form-label">Ключ для входа</label>
           </div>
 
-          <button class="w-100 btn btn-lg btn-warning" type="submit">Войти</button>
+          <button class="w-100 btn btn-lg btn-warning" type="submit"><span id="logintext" class="button-text">Войти</span><span id="loginloader" class="login-loader"> </span></button>
           <p class="mt-5 mb-3 text-muted">2022 &copy; savinov.kirill</p>
         </form>
       </div>
@@ -52,5 +50,15 @@ export default class LoginView extends AbstractView {
   toggleButton = (mode?: boolean): void => {
     const formButton: HTMLButtonElement = this.element.querySelector('button[type="submit"]');
     mode ? formButton.disabled = mode : formButton.disabled = !formButton.disabled;
+
+    const logintext: HTMLSpanElement = this.element.querySelector('#logintext');
+    const loginloader: HTMLSpanElement = this.element.querySelector('#loginloader');
+    if(mode){
+      logintext.style.display = 'none';
+      loginloader.style.display = 'inline-block';
+    } else {
+      logintext.style.display = 'inline-block';
+      loginloader.style.display = 'none';
+    }
   }
 }

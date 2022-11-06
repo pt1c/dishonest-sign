@@ -36,3 +36,37 @@ body, main {
   width: 100%;
   margin: 20px;
 }
+
+.button-text{
+  display: inline-block;
+  height: 33px;
+}
+
+.login-loader {
+  margin-top: 6px;
+  width : 20px;
+  height: 20px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  display: none;
+  position: relative;
+  animation: rotation 1s linear infinite;
+}
+
+.login-loader:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50% , -50%);
+  width: 20px + 8px;
+  height: 20px + 8px;
+  border-radius: 50%;
+  border: 3px solid ;
+  border-color: #ffffff transparent;
+}
+
+@keyframes rotation {
+  0% { transform: rotate(0deg) }
+  100% { transform: rotate(360deg) }
+}
