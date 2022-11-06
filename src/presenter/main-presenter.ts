@@ -1,9 +1,8 @@
 import { remove, render } from "../framework/render";
-import { getKeyFromStorage } from "../utils/token";
 import LoginView from "../view/login.view";
 import CertModel from "../model/cert.model";
 import LoginErrorView from "../view/login-error.view";
-import CRPTModel, { IncomingDocumentPosition } from "../model/crpt.model";
+import CRPTModel from "../model/crpt.model";
 import { AlertType, CRPTEvent, MarkCheck } from "../const";
 import IncomingDocumentsList from "../view/incoming-documents-list.view";
 import IncomingDocument from "../view/incoming-document.view";
@@ -20,7 +19,7 @@ export default class MainPresenter {
   #incomingDocument: IncomingDocument = null;
   #checkForm: CheckForm = null;
   #contentWrapper: ContentWrapper = null;
-  #badgeElement: BadgeElement = new BadgeElement();
+  #badgeElement: BadgeElement = null;
 
   //models
   #certModel = new CertModel();
@@ -84,9 +83,9 @@ export default class MainPresenter {
   //выводит один документ
   #showIncomingDocument = () => {
     if(this.#incomingDocument){
-      //remove(this.#contentWrapper);
       remove(this.#incomingDocument);
       remove(this.#checkForm);
+      remove(this.#badgeElement);
     }
 
     if(!this.#contentWrapper){
@@ -98,6 +97,7 @@ export default class MainPresenter {
     render(this.#checkForm, this.#contentWrapper.element);
     this.#checkForm.setClickHandler(this.#handleClickCheckForm);
 
+    this.#badgeElement = new BadgeElement();
     render(this.#badgeElement, this.#contentWrapper.element);
 
     this.#incomingDocument = new IncomingDocument(this.#CRPTModel.incomingDocumentPositions);
