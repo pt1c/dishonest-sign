@@ -1,0 +1,38 @@
+html,
+body,
+main {
+  width: 100%;
+  height: 100%;
+}
+
+body, main {
+  display: flex;
+  background-color: #f1f1f1;
+}
+
+.login_container {
+  width: 100%;
+  max-width: 550px;
+  padding: 15px;
+  margin: auto;
+  text-align: center !important;
+}
+
+.login_container .form-floating:focus-within {
+  z-index: 2;
+}
+
+.list-group-item.active {
+  color: $yellow-900;
+  background-color: $yellow-300;
+  border-color: $yellow-800;
+}
+
+.mark_checked {
+  background-color: $green-200 !important;
+}
+
+.content_wrapper {
+  width: 100%;
+  margin: 20px;
+}
