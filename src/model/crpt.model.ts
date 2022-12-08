@@ -158,10 +158,15 @@ export default class CRPTModel extends Observable {
 
   checkMark = (inputMark: string) => {
     let isFound: boolean = false;
+    let checkMark = inputMark;
+
+    if(checkMark.length > 31) {
+      checkMark = checkMark.substring(0, 31);
+    }
 
     this.#incomingDocumentPositions.forEach((item) =>
       item.marks.forEach((mark) => {
-        if(mark.mark === inputMark){
+        if(mark.mark === checkMark){
           isFound = true;
           mark.checked = true;
 
