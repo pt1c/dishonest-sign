@@ -17,19 +17,19 @@ export default class IncomingDocumentsList extends AbstractView {
           <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#crpt"/></svg>
           <span class="fs-5 fw-semibold">Входящие УПД</span>
         </a>
-        <div class="list-group list-group-flush border-bottom scrollarea" id="incoming-documents">
+        <ul class="list-group list-group-flush border-bottom scrollarea" id="incoming-documents">
           ${this.#documents.map((document: IncomingDocument) => (
             `
-            <a href="\#" class="list-group-item list-group-item-action py-3 lh-sm" data-id="${document.id}">
+            <li><a href="\#" class="list-group-item list-group-item-action py-3 lh-sm" data-id="${document.id}">
               <div class="d-flex w-100 align-items-center justify-content-between">
                 <strong class="mb-1">${document.number}</strong>
                 <small>${(document.total_price / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽</small>
               </div>
               <div class="col-10 mb-1 small">${document.sender_name}</div>
-            </a>
+            </a></li>
             `
           )).join('')}
-        </div>
+        </ul>
       </div>`
     );
   }
@@ -40,9 +40,12 @@ export default class IncomingDocumentsList extends AbstractView {
   };
 
   #clickHandler = (evt: any) => {
-    this.#prevAnchor && this.#prevAnchor.classList.remove('active');
+    if(this.#prevAnchor){
+      this.#prevAnchor.classList.remove('active');
+    }
 
-    const currentAnchor = evt.path.find((element: any) => element.tagName === 'A');
+    const path = evt.path || (evt.composedPath && evt.composedPath()); //fix path bug
+    const currentAnchor = path.find((element: any) => element.tagName === 'A');
     currentAnchor.classList.add('active');
     this.#prevAnchor = currentAnchor;
 
