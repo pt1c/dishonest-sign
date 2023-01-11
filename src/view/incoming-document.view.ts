@@ -6,6 +6,7 @@ type IncomintDocumentState = {
 }
 
 export default class IncomingDocument extends AbstractStatefulView<IncomintDocumentState> {
+  #prevButton: HTMLButtonElement = null;
 
   constructor(incomingDocumentPositions: IncomingDocumentPosition[]){
     super();
@@ -24,6 +25,7 @@ export default class IncomingDocument extends AbstractStatefulView<IncomintDocum
               <th scope="col">Название</th>
               <th scope="col">Количество</th>
               <th scope="col">Марка</th>
+              <th scope="col"><span class="copy-column"><svg width="16" height="16"><use xlink:href="#copy-result"/></span></th>
             </tr>
           </thead>
 
@@ -35,14 +37,25 @@ export default class IncomingDocument extends AbstractStatefulView<IncomintDocum
       item.marks.forEach((mark: Mark, i: number) => {
         const outputMark: string = `<td${mark.checked ? ' class="table-success"' : ''}>${this.#escape(mark.mark)}</td>`;
 
+        const copyButton: string = `
+          <td>
+            <button class="copy-button" title="Копировать" data-copymark="${this.#escape(mark.mark)}">
+              <span class="copy-button-icon"><svg width="16" height="16"><use xlink:href="#copy"/></svg></span>
+              <span class="copy-button-result hidden"><svg width="16" height="16"><use xlink:href="#copy-result"/></svg></span>
+            </button>
+          </td>
+        `;
+
         contentHTML += `<tr${outputChecked}>`;
         if (i == 0) {
           contentHTML += `<td${rowSpan}>${item.number}</td>`;
           contentHTML += `<td${rowSpan}>${this.#escape(item.name)}</td>`;
           contentHTML += `<td${rowSpan}>${item.quantity}</td>`;
           contentHTML += outputMark;
+          contentHTML += copyButton;
         } else {
           contentHTML += outputMark;
+          contentHTML += copyButton;
         }
         contentHTML += `</tr>`;
       });
@@ -79,4 +92,33 @@ export default class IncomingDocument extends AbstractStatefulView<IncomintDocum
     return ({ positions });
   }
 
+  setClickHandler = (callback: any) => {
+    this._callback.click = callback;
+    this.element.querySelector('table').addEventListener('click', this.#clickHandler);
+  };
+
+  #clickHandler = (evt: any) => {
+    const path = evt.path || (evt.composedPath && evt.composedPath()); //fix path bug
+    const currentButton = path.find((element: any) => element.tagName === 'BUTTON');
+
+    if(!currentButton){
+      return;
+    }
+
+    if(this.#prevButton){
+      this.#prevButton.querySelector('.copy-button-result')?.classList.add('hidden');
+      this.#prevButton.querySelector('.copy-button-icon')?.classList.remove('hidden');
+    }
+
+    this.#prevButton = currentButton as HTMLButtonElement;
+
+    currentButton.querySelector('.copy-button-icon')?.classList.add('hidden');
+    currentButton.querySelector('.copy-button-result')?.classList.remove('hidden');
+
+    this._callback.click(currentButton.dataset.copymark);
+  };
+
+  _restoreHandlers = (): void => {
+    this.setClickHandler(this._callback.click);
+  };
 }

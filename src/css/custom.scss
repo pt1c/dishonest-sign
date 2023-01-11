@@ -70,3 +70,31 @@ body, main {
   0% { transform: rotate(0deg) }
   100% { transform: rotate(360deg) }
 }
+
+.hidden {
+  display: none !important;
+}
+
+.copy-button {
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  border: 0;
+  display: inline-block;
+  transition-duration: 0.4s;
+}
+
+.copy-button:hover .copy-button-icon svg,
+.copy-button-result svg
+{
+    fill: #4eb543;
+}
+
+.copy-button span {
+  display: flex;
+}
+
+.copy-column {
+  display: flex;
+  justify-content: center;
+}

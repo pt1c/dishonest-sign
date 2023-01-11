@@ -102,11 +102,17 @@ export default class MainPresenter {
 
     this.#incomingDocument = new IncomingDocument(this.#CRPTModel.incomingDocumentPositions);
     render(this.#incomingDocument, this.#contentWrapper.element);
+    this.#incomingDocument.setClickHandler(this.#handleClickCopyMark);
   }
 
   //отрабатывает клик на кнопку проверки марки
   #handleClickCheckForm = (markId: string): void => {
     this.#CRPTModel.checkMark(markId);
+  }
+
+  //отрабатывает клик на кнопку копирования марки
+  #handleClickCopyMark = (markId: string): void => {
+    navigator.clipboard.writeText(markId);
   }
 
   //хендлы обсервера
