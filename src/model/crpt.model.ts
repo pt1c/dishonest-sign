@@ -61,12 +61,12 @@ export default class CRPTModel extends Observable {
   }
 
   #getPreAuth = async (): Promise<PreAuthResponse> => {
-    const response = await axios.get('https://markirovka.crpt.ru/api/v3/auth/cert/key');
+    const response = await axios.get(CORSProxy + '/https://markirovka.crpt.ru/api/v3/auth/cert/key');
     return await response.data;
   }
 
   #getAuth = async (hashed: AuthRequest): Promise<AuthResponse> => {
-    const response = await axios.post('https://markirovka.crpt.ru/api/v3/auth/cert/', hashed);
+    const response = await axios.post(CORSProxy + '/https://markirovka.crpt.ru/api/v3/auth/cert/', hashed);
     return await response.data;
   }
 
@@ -134,14 +134,22 @@ export default class CRPTModel extends Observable {
 
   getOneUPD = async (documentId: string) => {
     const data = await this.#getIncomingUPD(documentId);
-    //console.log(data);
+    //console.log(data.content.products);
 
     this.#incomingDocumentPositions = [];
     data.content.products.forEach((product: any) => {
       const marks: string[] = [];
-      product.good_identification_numbers.forEach((good: any) => {
-        marks.push(...good.cis);
-      });
+
+      //обновление после появления extra_inf
+      if(Object.hasOwn(product, 'extra_inf')){
+        product.extra_inf.good_identification_numbers.forEach((good: any) => {
+          marks.push(...good.cis);
+        });
+      } else {
+        product.good_identification_numbers.forEach((good: any) => {
+          marks.push(...good.cis);
+        });
+      }
 
       this.#incomingDocumentPositions.push({
         number: product.number,
